@@ -4,6 +4,7 @@ go 1.19
 
 require (
 	github.com/go-sql-driver/mysql v1.6.0
+	github.com/p4gefau1t/trojan-go v0.10.6
 	github.com/refraction-networking/utls v1.2.0
 	github.com/shadowsocks/go-shadowsocks2 v0.1.5
 	github.com/smartystreets/goconvey v1.6.4

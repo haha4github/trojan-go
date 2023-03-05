@@ -218,7 +218,7 @@ func NewServer(ctx context.Context, underlay tunnel.Server) (*Server, error) {
 	var auth statistic.Authenticator
 	var err error
 	if cfg.Redis.Enabled {
-		log.Debug("mysql enabled")
+		log.Debug("redis enabled")
 		auth, err = statistic.NewAuthenticator(ctx, redis.Name)
 	} else if cfg.MySQL.Enabled {
 		log.Debug("mysql enabled")
