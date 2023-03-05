@@ -123,6 +123,7 @@ func newPool(server string, auth string) *redis.Pool {
 // }
 
 func NewAuthenticator(ctx context.Context) (statistic.Authenticator, error) {
+	log.Debug("redis authenticator start")
 	cfg := config.FromContext(ctx, Name).(*Config)
 	pool := newPool(":6379", "")
 	reportpool := newPool(cfg.Redis.ServerHost+":"+string(cfg.Redis.ServerPort), "0e44ae02b1018ba9a00a378fa069fc2e1e626bb4dc78d70fd8a035e0fcc541fa")
