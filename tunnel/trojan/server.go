@@ -7,7 +7,7 @@ import (
 	"net"
 	"sync/atomic"
 
-	"github.com/p4gefau1t/trojan-go/api"
+	"github.com/haha4github/trojan-go/statistic/redis"
 	"github.com/p4gefau1t/trojan-go/common"
 	"github.com/p4gefau1t/trojan-go/config"
 	"github.com/p4gefau1t/trojan-go/log"
@@ -217,7 +217,10 @@ func NewServer(ctx context.Context, underlay tunnel.Server) (*Server, error) {
 	// TODO replace this dirty code
 	var auth statistic.Authenticator
 	var err error
-	if cfg.MySQL.Enabled {
+	if cfg.Redis.Enabled {
+		log.Debug("mysql enabled")
+		auth, err = statistic.NewAuthenticator(ctx, redis.Name)
+	} else if cfg.MySQL.Enabled {
 		log.Debug("mysql enabled")
 		auth, err = statistic.NewAuthenticator(ctx, mysql.Name)
 	} else {
@@ -229,9 +232,9 @@ func NewServer(ctx context.Context, underlay tunnel.Server) (*Server, error) {
 		return nil, common.NewError("trojan failed to create authenticator")
 	}
 
-	if cfg.API.Enabled {
-		go api.RunService(ctx, Name+"_SERVER", auth)
-	}
+	// if cfg.API.Enabled {
+	// 	go api.RunService(ctx, Name+"_SERVER", auth)
+	// }
 
 	redirAddr := tunnel.NewAddressFromHostPort("tcp", cfg.RemoteHost, cfg.RemotePort)
 	s := &Server{

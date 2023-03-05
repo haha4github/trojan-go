@@ -9,7 +9,12 @@ type Config struct {
 	RemotePort       int         `json:"remote_port" yaml:"remote-port"`
 	DisableHTTPCheck bool        `json:"disable_http_check" yaml:"disable-http-check"`
 	MySQL            MySQLConfig `json:"mysql" yaml:"mysql"`
+	Redis            RedisConfig `json:"redis" yaml:"redis"`
 	API              APIConfig   `json:"api" yaml:"api"`
+}
+
+type RedisConfig struct {
+	Enabled bool `json:"enabled" yaml:"enabled"`
 }
 
 type MySQLConfig struct {
