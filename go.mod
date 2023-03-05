@@ -1,4 +1,4 @@
-module github.com/p4gefau1t/trojan-go
+module github.com/haha4github/trojan-go
 
 go 1.19
 
