@@ -7,7 +7,7 @@ import (
 type RedisConfig struct {
 	Enabled    bool   `json:"enabled" yaml:"enabled"`
 	ServerHost string `json:"server_addr" yaml:"server-addr"`
-	ServerPort int    `json:"server_addr" yaml:"server-addr"`
+	ServerPort int    `json:"server_port" yaml:"server-port"`
 	CheckRate  int    `json:"check_rate" yaml:"check-rate"`
 }
 
