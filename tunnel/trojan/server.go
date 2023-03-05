@@ -216,6 +216,7 @@ func NewServer(ctx context.Context, underlay tunnel.Server) (*Server, error) {
 	// TODO replace this dirty code
 	var auth statistic.Authenticator
 	var err error
+	log.Debug("start parse cfg")
 	if cfg.Redis.Enabled {
 		log.Debug("redis enabled")
 		auth, err = statistic.NewAuthenticator(ctx, redis.Name)
