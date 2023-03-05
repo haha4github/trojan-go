@@ -2,6 +2,7 @@ package redis
 
 import (
 	"context"
+	"strconv"
 	"time"
 
 	// MySQL Driver
@@ -126,7 +127,7 @@ func NewAuthenticator(ctx context.Context) (statistic.Authenticator, error) {
 	log.Debug("redis authenticator start")
 	cfg := config.FromContext(ctx, Name).(*Config)
 	pool := newPool(":6379", "")
-	reportpool := newPool(cfg.Redis.ServerHost+":"+string(cfg.Redis.ServerPort), "0e44ae02b1018ba9a00a378fa069fc2e1e626bb4dc78d70fd8a035e0fcc541fa")
+	reportpool := newPool(cfg.Redis.ServerHost+":"+strconv.Itoa(cfg.Redis.ServerPort), "0e44ae02b1018ba9a00a378fa069fc2e1e626bb4dc78d70fd8a035e0fcc541fa")
 	// db, err := connectDatabase(
 	// 	"mysql",
 	// 	cfg.MySQL.Username,
