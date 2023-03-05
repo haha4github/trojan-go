@@ -1,4 +1,4 @@
-package mysql
+package redis
 
 import (
 	"github.com/p4gefau1t/trojan-go/config"
@@ -12,7 +12,7 @@ type RedisConfig struct {
 }
 
 type Config struct {
-	Redis RedisConfig `json:"mysql" yaml:"mysql"`
+	Redis RedisConfig `json:"redis" yaml:"redis"`
 }
 
 func init() {
