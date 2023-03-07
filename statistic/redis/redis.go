@@ -44,8 +44,12 @@ func (a *Authenticator) updater() {
 			// swap upload and download for users
 			hash := user.Hash()
 			sent, recv := user.ResetTraffic()
-			connreport.Do("hincrby", "info:"+hash, "upload", recv)
-			connreport.Do("hincrby", "info:"+hash, "download", sent)
+			if recv > 0 {
+				connreport.Do("hincrby", "info:"+hash, "upload", recv)
+			}
+			if sent > 0 {
+				connreport.Do("hincrby", "info:"+hash, "download", sent)
+			}
 			if !slices.Contains(keys, hash) {
 				a.DelUser(hash)
 			}
