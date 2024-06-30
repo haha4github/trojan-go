@@ -9,7 +9,7 @@ require (
 	github.com/shadowsocks/go-shadowsocks2 v0.1.5
 	github.com/smartystreets/goconvey v1.6.4
 	github.com/stretchr/testify v1.7.0
-	github.com/txthinking/socks5 v0.0.0-20230304014913-225d9357dddc
+	github.com/txthinking/socks5 v0.0.0-20230307060754-14d90cd4e0d8
 	github.com/v2fly/v2ray-core/v4 v4.45.2
 	github.com/xtaci/smux v1.5.24
 	golang.org/x/net v0.8.0
@@ -38,7 +38,7 @@ require (
 	go4.org/intern v0.0.0-20230205224052-192e9f60865c // indirect
 	go4.org/unsafe/assume-no-moving-gc v0.0.0-20230221090011-e4bae7ad2296 // indirect
 	golang.org/x/crypto v0.7.0 // indirect
-	golang.org/x/exp v0.0.0-20230304125523-9ff063c70017
+	golang.org/x/exp v0.0.0-20230306221820-f0f767cdffd6
 	golang.org/x/sys v0.6.0 // indirect
 	golang.org/x/text v0.8.0 // indirect
 	google.golang.org/genproto v0.0.0-20221118155620-16455021b5e6 // indirect

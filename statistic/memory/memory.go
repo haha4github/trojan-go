@@ -8,10 +8,10 @@ import (
 
 	"golang.org/x/time/rate"
 
+	"github.com/haha4github/trojan-go/statistic"
 	"github.com/p4gefau1t/trojan-go/common"
 	"github.com/p4gefau1t/trojan-go/config"
 	"github.com/p4gefau1t/trojan-go/log"
-	"github.com/p4gefau1t/trojan-go/statistic"
 )
 
 const Name = "MEMORY"
@@ -151,7 +151,7 @@ func (u *User) ResetTraffic() (uint64, uint64) {
 }
 
 func (u *User) speedUpdater() {
-	ticker := time.NewTicker(time.Second)
+	ticker := time.NewTicker(10 * time.Second)
 	for {
 		select {
 		case <-u.ctx.Done():
@@ -192,7 +192,9 @@ func (a *Authenticator) AddUser(hash string) error {
 		ctx:    ctx,
 		cancel: cancel,
 	}
-	go meter.speedUpdater()
+	log.Debug("hash " + hash + " added")
+	meter.SetSpeedLimit(3, 3)
+	// go meter.speedUpdater()
 	a.users.Store(hash, meter)
 	return nil
 }

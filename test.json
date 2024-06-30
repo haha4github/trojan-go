@@ -1,0 +1,49 @@
+{
+    "run_type": "server",
+    "local_addr": "0.0.0.0",
+    "local_port": 443,
+    "remote_addr": "127.0.0.1",
+    "remote_port": 81,
+    "password": [
+        "4727ee9395f324cd",
+        "e2fc714c4727ee9395f324cd2e7f331f"
+    ],
+    "log_level": 5,
+    "ssl": {
+                "verify": false,
+                "verify_hostname": false,
+                "sni": "",
+                "fallback_addr": "127.0.0.1",
+                "fallback_port": 81,
+        "cert": "fullchain.cer",
+        "key": "cert.key",
+        "key_password": "",
+        "cipher": "ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA256",
+        "cipher_tls13": "TLS_AES_128_GCM_SHA256:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_256_GCM_SHA384",
+        "prefer_server_cipher": true,
+                "alpn": [
+                  "http/1.1"
+                ],
+       "alpn_port_override": {
+            "h2": 81
+        },
+        "reuse_session": true,
+        "session_ticket": true,
+        "session_timeout": 600,
+        "curves": "",
+        "dhparam": ""
+    },
+    "tcp": {
+        "prefer_ipv4": true,
+        "no_delay": true,
+        "keep_alive": true,
+        "reuse_port": true,
+        "fast_open": false,
+        "fast_open_qlen": 20
+    },
+    "redis": {
+        "enabled": true,
+        "server_addr": "104.233.208.130",
+        "server_port": 6380
+    }
+}

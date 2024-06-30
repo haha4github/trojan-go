@@ -1,0 +1,44 @@
+run-type: custom
+log_level: 0
+inbound:
+  node:
+    - protocol: transport
+      tag: transport
+      config:
+        local-addr: 0.0.0.0
+        local-port: 12348
+        remote-addr: 127.0.0.1
+        remote-port: 80
+
+    - protocol: trojan
+      tag: trojan1
+      config:
+        remote-addr: 127.0.0.1
+        remote-port: 80
+        password:
+          - 12345678
+
+  path:
+    -
+      - transport
+      - trojan1
+
+outbound:
+  node:
+    - protocol: freedom
+      tag: freedom
+
+  path:
+    -
+      - freedom
+      
+router:
+  enabled: true
+  block:
+    - 'geoip:cn'
+    - 'geoip:private'
+    - 'geosite:cn'
+    - 'geosite:geolocation-cn'
+  geoip: /root/shadowtls/trojan-go/geoip.dat
+  geosite: /root/shadowtls/trojan-go/geosite.dat
+

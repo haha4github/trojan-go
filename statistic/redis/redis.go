@@ -2,35 +2,42 @@ package redis
 
 import (
 	"context"
-	"strconv"
 	"time"
 
 	// MySQL Driver
 	// _ "github.com/go-sql-driver/mysql"
 	"github.com/gomodule/redigo/redis"
 	_ "github.com/gomodule/redigo/redis"
-	"golang.org/x/exp/slices"
 
+	"github.com/haha4github/trojan-go/statistic"
+	"github.com/haha4github/trojan-go/statistic/memory"
 	"github.com/p4gefau1t/trojan-go/common"
 	"github.com/p4gefau1t/trojan-go/config"
 	"github.com/p4gefau1t/trojan-go/log"
-	"github.com/p4gefau1t/trojan-go/statistic"
-	"github.com/p4gefau1t/trojan-go/statistic/memory"
 )
 
 const Name = "REDIS"
 
 type Authenticator struct {
 	*memory.Authenticator
-	pool           *redis.Pool
-	reportpool     *redis.Pool
+	pool *redis.Pool
+	// reportpool     *redis.Pool
 	updateDuration time.Duration
 	ctx            context.Context
 }
 
+func contains(keys []string, key string) bool {
+	for _, k := range keys {
+		if k == key {
+			return true
+		}
+	}
+	return false
+}
+
 func (a *Authenticator) updater() {
 	conn := a.pool.Get()
-	connreport := a.reportpool.Get()
+	// connreport := a.reportpool.Get()
 	for {
 		// update memory
 		keys, err := redis.Strings(conn.Do("keys", "userkey:*"))
@@ -40,31 +47,51 @@ func (a *Authenticator) updater() {
 			continue
 		}
 
-		for _, user := range a.ListUsers() {
-			// swap upload and download for users
-			hash := user.Hash()
-			sent, recv := user.ResetTraffic()
-			if recv > 0 {
-				connreport.Do("hincrby", "info:"+hash, "upload", recv)
-			}
-			if sent > 0 {
-				connreport.Do("hincrby", "info:"+hash, "download", sent)
-			}
-			if !slices.Contains(keys, hash) {
-				a.DelUser(hash)
-			}
-			// s, err := a.db.Exec("UPDATE `users` SET `upload`=`upload`+?, `download`=`download`+? WHERE `password`=?;", recv, sent, hash)
-			// if err != nil {
-			// 	log.Error(common.NewError("failed to update data to user table").Base(err))
-			// 	continue
-			// }
-			// if r, err := s.RowsAffected(); err != nil {
-			// 	if r == 0 {
-			// 		a.DelUser(hash)
-			// 	}
-			// }
-
+		// 使用map代替切片，以提高查找速度
+		keysMap := make(map[string]struct{})
+		for _, key := range keys {
+			keysMap[key] = struct{}{}
 		}
+
+		// connreport.Send("MULTI")
+		// for _, user := range a.ListUsers() {
+		// 	// swap upload and download for users
+		// 	hash := user.Hash()
+		// 	sent, recv := user.ResetTraffic()
+		// 	if recv > 0 {
+		// 		connreport.Send("hincrby", "info:"+hash, "upload", recv)
+		// 	}
+		// 	if sent > 0 {
+		// 		connreport.Send("hincrby", "info:"+hash, "download", sent)
+		// 	}
+
+		// 	userKey := "userkey:" + hash
+
+		// 	// 直接在map中查找键，而不是使用 contains 函数
+		// 	if _, exists := keysMap[userKey]; !exists {
+		// 		a.DelUser(hash)
+		// 	}
+		// 	// if !slices.Contains(keys, "userkey:"+hash) {
+		// 	// 	a.DelUser(hash)
+		// 	// }
+		// 	// s, err := a.db.Exec("UPDATE `users` SET `upload`=`upload`+?, `download`=`download`+? WHERE `password`=?;", recv, sent, hash)
+		// 	// if err != nil {
+		// 	// 	log.Error(common.NewError("failed to update data to user table").Base(err))
+		// 	// 	continue
+		// 	// }
+		// 	// if r, err := s.RowsAffected(); err != nil {
+		// 	// 	if r == 0 {
+		// 	// 		a.DelUser(hash)
+		// 	// 	}
+		// 	// }
+
+		// }
+		// // Execute the transaction
+		// _, err = connreport.Do("EXEC")
+		// if err != nil {
+		// 	log.Error(common.NewError("failed to execute transaction").Base(err))
+		// 	// Handle the error as needed
+		// }
 
 		for _, key := range keys {
 			// var hash string
@@ -131,25 +158,15 @@ func NewAuthenticator(ctx context.Context) (statistic.Authenticator, error) {
 	log.Debug("redis authenticator start")
 	cfg := config.FromContext(ctx, Name).(*Config)
 	pool := newPool(":6379", "")
-	reportpool := newPool(cfg.Redis.ServerHost+":"+strconv.Itoa(cfg.Redis.ServerPort), "0e44ae02b1018ba9a00a378fa069fc2e1e626bb4dc78d70fd8a035e0fcc541fa")
-	// db, err := connectDatabase(
-	// 	"mysql",
-	// 	cfg.MySQL.Username,
-	// 	cfg.MySQL.Password,
-	// 	cfg.MySQL.ServerHost,
-	// 	cfg.MySQL.ServerPort,
-	// 	cfg.MySQL.Database,
-	// )
-	// if err != nil {
-	// 	return nil, common.NewError("Failed to connect to database server").Base(err)
-	// }
+	// reportpool := newPool(cfg.Redis.ServerHost+":"+strconv.Itoa(cfg.Redis.ServerPort), "0e44ae02b1018ba9a00a378fa069fc2e1e626bb4dc78d70fd8a035e0fcc541fa")
+
 	memoryAuth, err := memory.NewAuthenticator(ctx)
 	if err != nil {
 		return nil, err
 	}
 	a := &Authenticator{
-		pool:           pool,
-		reportpool:     reportpool,
+		pool: pool,
+		// reportpool:     reportpool,
 		ctx:            ctx,
 		updateDuration: time.Duration(cfg.Redis.CheckRate) * time.Second,
 		Authenticator:  memoryAuth.(*memory.Authenticator),

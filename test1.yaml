@@ -1,0 +1,23 @@
+run-type: server
+local-addr: 0.0.0.0
+local-port: 12348
+remote-addr: 127.0.0.1
+remote-port: 80
+password:
+  - 12345678
+transport-plugin:
+  enabled: true
+  type: 'plaintext'
+tcp: 
+  no-delay: true
+  keep-alive: true
+  prefer-ipv4: false
+router:
+  enabled: true
+  block:
+    - 'geoip:cn'
+    - 'geoip:private'
+    - 'geosite:cn'
+    - 'geosite:geolocation-cn'
+  geoip: /root/shadowtls/trojan-go/geoip.dat
+  geosite: /root/shadowtls/trojan-go/geosite.dat

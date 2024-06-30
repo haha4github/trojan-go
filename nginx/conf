@@ -1,0 +1,49 @@
+server {
+    listen 80 default_server;
+
+    server_name _;
+
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 81 default_server;
+
+    server_name _;
+
+    return 301 https://www.icloud.com$request_uri;
+}
+
+server {
+    listen 83 default_server;
+
+    server_name _;
+
+    return 301 https://www.icloud.com$request_uri;
+}
+
+server {
+    # 服务器端口使用443，开启ssl, 这里ssl就是上面安装的ssl模块
+    resolver 8.8.8.8;
+    listen       82;
+    # 域名，多个以空格分开
+    server_name _;
+
+    # ssl证书地址
+
+    # ssl验证相关配置
+        location / {
+                # First attempt to serve request as file, then
+                # as directory, then fall back to displaying a 404.
+                proxy_pass https://www.icloud.com$request_uri;
+                proxy_set_header HOST www.icloud.com;
+                proxy_buffers 256 4k;
+                proxy_max_temp_file_size 0k;
+                proxy_connect_timeout 30;
+                proxy_send_timeout 60;
+                proxy_read_timeout 60;
+                proxy_next_upstream error timeout invalid_header http_502;
+                #try_files $uri $uri/ =404;
+        }
+
+}
